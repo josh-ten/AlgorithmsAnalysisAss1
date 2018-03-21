@@ -22,7 +22,12 @@ public class JoshGraphTester {
         graph.addEdge("B", "B");
         
         graph.printVertices(writer);
+
         graph.printEdges(writer);
+        graph.removeVertex("A");
+        
+        graph.printEdges(writer);
+        writer.println("\n" + graph.neighbours("B"));
 
         String inputFilename = "";
         if (inputFilename != "") loadFile(inputFilename);

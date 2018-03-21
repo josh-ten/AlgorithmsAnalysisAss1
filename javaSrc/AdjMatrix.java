@@ -30,7 +30,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     
     public void addVertex(T vertLabel) {
-        //Add it's own row
+        //Add new row
         ArrayList<T> vertex = new ArrayList<T>();
         vertex.add(vertLabel);
         matrix.add(vertex);
@@ -48,20 +48,22 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of addVertex()
 	
     
+    @SuppressWarnings("unchecked")
     public void addEdge(T srcLabel, T tarLabel) {
-        //Find the corresponding vertex
-        ArrayList<T> labelRow = matrix.get(0);
-        int srcIndex = labelRow.indexOf(srcLabel);
-        int tarIndex = labelRow.indexOf(tarLabel);
-        ArrayList<T> src = matrix.get(srcIndex + 1);
-        ArrayList<T> tar = matrix.get(tarIndex + 1);
+        int srcIndex = findVertIndex(srcLabel);
+        int tarIndex = findVertIndex(tarLabel);
+        ArrayList<T> src = matrix.get(srcIndex);
+        ArrayList<T> tar = matrix.get(tarIndex);
                 
-        int currSrcEdges = (int) src.get(tarIndex+1);
+        //Find the new value to put in the relation cell
+        int currSrcEdges = (int) src.get(tarIndex);
+        int currTarEdges = (int) tar.get(srcIndex);
         T newSrcEdges = (T) new Integer(currSrcEdges+1);
-        int currTarEdges = (int) tar.get(srcIndex+1);
         T newTarEdges = (T) new Integer(currTarEdges+1);
-        src.set(tarIndex+1, newSrcEdges);
-        tar.set(srcIndex+1, newTarEdges);
+        
+        //Set the value
+        src.set(tarIndex, newSrcEdges);
+        tar.set(srcIndex, newTarEdges);
        
     } // end of addEdge()
 	
@@ -69,14 +71,35 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
         
-        // Implement me!
+        int vertIndex = findVertIndex(vertLabel);
+        ArrayList<T> vertex = matrix.get(vertIndex);
+        
+        //Find which vertices have 1 or more connection and add them to the list
+        for (int i = 1; i < vertex.size(); i++) {
+            if ((int) vertex.get(i) > 0) {
+                ArrayList<T> neighbour = matrix.get(i); //Add for entire list of neighbours 
+                T neighbourLabel = neighbour.get(0); //Add for only label
+                neighbours.add(neighbourLabel);
+            }
+        }
         
         return neighbours;
     } // end of neighbours()
     
     
     public void removeVertex(T vertLabel) {
-        // Implement me!
+        int vertIndex = findVertIndex(vertLabel);
+        ArrayList<T> vertexToRemove = matrix.get(vertIndex);
+        
+        System.out.println("\nRemoving " + vertLabel + "...");
+        
+        for (int i = 1; i < matrix.size(); i++) {
+            ArrayList<T> vertex = matrix.get(i);
+            vertex.remove(vertIndex);
+        }
+        
+        matrix.remove(vertexToRemove);
+        matrix.get(0).remove(vertIndex - 1);
     } // end of removeVertex()
 	
     
@@ -110,5 +133,18 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         // if we reach this point, source and target are disconnected
         return disconnectedDist;    	
     } // end of shortestPathDistance()
+    
+
+    private int findVertIndex(T vertLabel) {
+        //Find the corresponding vertex
+        ArrayList<T> labelRow = matrix.get(0);
+        int vertIndex;
+        if ((vertIndex = labelRow.indexOf(vertLabel)) == -1) {
+            System.out.println("Error: Vertex '" + vertLabel + "' does not exist in the matrix");
+            throw new IllegalArgumentException();
+        }
+        vertIndex += 1; //Add 1 to account for the label cell
+        return vertIndex;
+    }
     
 } // end of class AdjMatrix
