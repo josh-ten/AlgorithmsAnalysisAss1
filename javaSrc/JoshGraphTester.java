@@ -24,10 +24,17 @@ public class JoshGraphTester {
         graph.printVertices(writer);
 
         graph.printEdges(writer);
-        graph.removeVertex("A");
+        graph.removeVertex("B");
         
         graph.printEdges(writer);
-        writer.println("\n" + graph.neighbours("B"));
+        graph.addVertex("D");
+        graph.addEdge("D", "C");
+        graph.printEdges(writer);
+        writer.println(graph.neighbours("C"));
+        
+        graph.removeEdge("C", "D");
+        graph.printEdges(writer);
+        graph.printVertices(writer);
 
         String inputFilename = "";
         if (inputFilename != "") loadFile(inputFilename);

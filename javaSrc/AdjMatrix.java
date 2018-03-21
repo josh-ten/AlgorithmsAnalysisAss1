@@ -29,6 +29,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of AdjMatrix()
     
     
+    @SuppressWarnings("unchecked")
     public void addVertex(T vertLabel) {
         //Add new row
         ArrayList<T> vertex = new ArrayList<T>();
@@ -37,6 +38,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         //Add to label row
         ArrayList<T> labelRow = matrix.get(0);
         labelRow.add(vertLabel);
+        System.out.println("Adding vertex " + vertLabel + "...");
         //Add blank cells to existing verticies (skipping label row)
         for (int i = 1; i < matrix.size(); i++) {
             vertex = matrix.get(i);
@@ -54,6 +56,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         int tarIndex = findVertIndex(tarLabel);
         ArrayList<T> src = matrix.get(srcIndex);
         ArrayList<T> tar = matrix.get(tarIndex);
+        
+        System.out.println("Adding edge from " + srcLabel + " to " + tarLabel + "...");
                 
         //Find the new value to put in the relation cell
         int currSrcEdges = (int) src.get(tarIndex);
@@ -91,7 +95,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         int vertIndex = findVertIndex(vertLabel);
         ArrayList<T> vertexToRemove = matrix.get(vertIndex);
         
-        System.out.println("\nRemoving " + vertLabel + "...");
+        System.out.println("Removing " + vertLabel + "...");
         
         for (int i = 1; i < matrix.size(); i++) {
             ArrayList<T> vertex = matrix.get(i);
@@ -103,8 +107,27 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of removeVertex()
 	
     
+    @SuppressWarnings("unchecked")
     public void removeEdge(T srcLabel, T tarLabel) {
-        // Implement me!
+        int srcIndex = findVertIndex(srcLabel);
+        int tarIndex = findVertIndex(tarLabel);
+        ArrayList<T> src = matrix.get(srcIndex);
+        ArrayList<T> tar = matrix.get(tarIndex);
+                
+        //Find the new value to put in the relation cell
+        int currSrcEdges = (int) src.get(tarIndex);
+        int currTarEdges = (int) tar.get(srcIndex);
+        T newSrcEdges = (T) new Integer(currSrcEdges - 1);
+        T newTarEdges = (T) new Integer(currTarEdges - 1);
+        
+        if ((int) newSrcEdges < 0 || (int) newTarEdges < 0) {
+            System.out.println("\nNo edge between " + srcLabel + " and " + tarLabel + "...");
+        } else {
+            System.out.println("\nRemoving edge between " + srcLabel + " and " + tarLabel);
+            //Set the value
+            src.set(tarIndex, newSrcEdges);
+            tar.set(srcIndex, newTarEdges);
+        }
     } // end of removeEdges()
 	
     
@@ -125,6 +148,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
             ArrayList<T> row = matrix.get(i);
             os.println(row);
         }
+        os.println();
     } // end of printEdges()
     
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
