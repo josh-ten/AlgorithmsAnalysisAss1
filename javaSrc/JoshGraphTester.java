@@ -16,14 +16,17 @@ public class JoshGraphTester {
         graph.addVertex("A");
         graph.addVertex("B");
         graph.addVertex("C");
+        graph.addVertex("D");
+        graph.addVertex("E");
         graph.addEdge("A", "B");
-        graph.addEdge("C", "A");
-        graph.addEdge("A", "C");
-        graph.addEdge("B", "B");
+        graph.addEdge("B", "D");
+        graph.addEdge("D", "C");
+        graph.addEdge("A", "E");
         
-        graph.printVertices(writer);
-
         graph.printEdges(writer);
+        
+        graph.shortestPathDistance("A", "E");
+/*
         graph.removeVertex("B");
         
         graph.printEdges(writer);
@@ -35,7 +38,7 @@ public class JoshGraphTester {
         graph.removeEdge("C", "D");
         graph.printEdges(writer);
         graph.printVertices(writer);
-
+*/
         String inputFilename = "";
         if (inputFilename != "") loadFile(inputFilename);
     }

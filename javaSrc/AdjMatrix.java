@@ -68,7 +68,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         //Set the value
         src.set(tarIndex, newSrcEdges);
         tar.set(srcIndex, newTarEdges);
-       
+        
     } // end of addEdge()
 	
 
@@ -151,12 +151,59 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         os.println();
     } // end of printEdges()
     
+    @SuppressWarnings("unchecked")
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
-    	// Implement me!
+        int distance = 0;
+        
+    	int vert1Index = findVertIndex(vertLabel1);
+    	int vert2Index = findVertIndex(vertLabel2);
+    	ArrayList<T> vert1 = matrix.get(vert1Index);
+    	ArrayList<T> vert2 = matrix.get(vert2Index);
+    	
+    	ArrayList<T> labelRow = matrix.get(0);
+    	int numVertices = labelRow.size();
+    	
+    	ArrayList<T> checkedVertices = new ArrayList<T>();
+    	ArrayList<T> currentVertex = vert1;
+    	
+    	while (checkedVertices.size() < numVertices && currentVertex != vert2 && distance < 20) {
+    	    distance++;
+        	for (int i = 1; i < currentVertex.size(); i++) {
+        	    ArrayList<T> neighbour = matrix.get(i);
+        	    if (currentVertex != neighbour && 
+        	        verticesConnected(currentVertex.get(0), neighbour.get(0)) &&
+        	        checkedVertices.contains(neighbour) == false) {
+        	        System.out.println(neighbour);
+        	        if (neighbour == vert2) {
+        	            System.out.println("Found destination in " + distance + " steps!");
+        	            return distance;
+        	        } else {
+        	            checkedVertices.add((T) currentVertex);
+        	            currentVertex = neighbour;
+        	        }
+        	    }
+        	}
+    	}
     	
         // if we reach this point, source and target are disconnected
         return disconnectedDist;    	
     } // end of shortestPathDistance()
+    
+    
+    private boolean verticesConnected(T vertLabel1, T vertLabel2) {
+        int vert1Index = findVertIndex(vertLabel1);
+        int vert2Index = findVertIndex(vertLabel2);
+        ArrayList<T> vert1 = matrix.get(vert1Index);
+                
+        //Find the new value to put in the relation cell
+        int connectedEdges = (int) vert1.get(vert2Index);
+        if (connectedEdges == 0) {
+            ArrayList<T> neighbour = vert1.get(0);
+            return verticesConnected(vertLabel1, neighbour.get(0));
+        }
+        System.out.println(vertLabel1 + ", " + vertLabel2 + " are connected");
+        return true;
+    }
     
 
     private int findVertIndex(T vertLabel) {
