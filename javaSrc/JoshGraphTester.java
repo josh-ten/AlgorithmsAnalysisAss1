@@ -25,20 +25,22 @@ public class JoshGraphTester {
         
         graph.printEdges(writer);
         
-        graph.shortestPathDistance("A", "E");
-/*
+        graph.shortestPathDistance("D", "E");
+
         graph.removeVertex("B");
         
         graph.printEdges(writer);
         graph.addVertex("D");
         graph.addEdge("D", "C");
+        graph.addEdge("E", "D");
+        graph.addEdge("D", "D");
         graph.printEdges(writer);
         writer.println(graph.neighbours("C"));
         
         graph.removeEdge("C", "D");
         graph.printEdges(writer);
         graph.printVertices(writer);
-*/
+
         String inputFilename = "";
         if (inputFilename != "") loadFile(inputFilename);
     }

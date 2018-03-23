@@ -12,12 +12,6 @@ import java.util.*;
 public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 {
     public ArrayList<ArrayList<T>> matrix;
-    /** _|A|B|C_
-     *  A|1|0|1
-     *  B|1|0|0
-     *  C|1|1|0
-     */
-    
 	/**
 	 * Contructs empty graph.
 	 */
@@ -151,58 +145,57 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         os.println();
     } // end of printEdges()
     
-    @SuppressWarnings("unchecked")
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
-        int distance = 0;
-        
-    	int vert1Index = findVertIndex(vertLabel1);
-    	int vert2Index = findVertIndex(vertLabel2);
-    	ArrayList<T> vert1 = matrix.get(vert1Index);
-    	ArrayList<T> vert2 = matrix.get(vert2Index);
+    	ArrayList<T> start = labelToVert(vertLabel1);
+    	ArrayList<T> goal = labelToVert(vertLabel2);
     	
-    	ArrayList<T> labelRow = matrix.get(0);
-    	int numVertices = labelRow.size();
+    	ArrayList<ArrayList<T>> currNodes = new ArrayList<ArrayList<T>>();
+    	currNodes.add(start);
     	
-    	ArrayList<T> checkedVertices = new ArrayList<T>();
-    	ArrayList<T> currentVertex = vert1;
-    	
-    	while (checkedVertices.size() < numVertices && currentVertex != vert2 && distance < 20) {
-    	    distance++;
-        	for (int i = 1; i < currentVertex.size(); i++) {
-        	    ArrayList<T> neighbour = matrix.get(i);
-        	    if (currentVertex != neighbour && 
-        	        verticesConnected(currentVertex.get(0), neighbour.get(0)) &&
-        	        checkedVertices.contains(neighbour) == false) {
-        	        System.out.println(neighbour);
-        	        if (neighbour == vert2) {
-        	            System.out.println("Found destination in " + distance + " steps!");
-        	            return distance;
-        	        } else {
-        	            checkedVertices.add((T) currentVertex);
-        	            currentVertex = neighbour;
-        	        }
-        	    }
-        	}
-    	}
-    	
-        // if we reach this point, source and target are disconnected
-        return disconnectedDist;    	
+    	ArrayList<ArrayList<T>> checkedNodes = new ArrayList<ArrayList<T>>();
+    	int distance = checkNeighbours(currNodes, goal, 0, checkedNodes);
+    	System.out.println("Found connection in " + distance + " steps!");
+    	return distance;    	
     } // end of shortestPathDistance()
     
-    
-    private boolean verticesConnected(T vertLabel1, T vertLabel2) {
-        int vert1Index = findVertIndex(vertLabel1);
-        int vert2Index = findVertIndex(vertLabel2);
-        ArrayList<T> vert1 = matrix.get(vert1Index);
-                
-        //Find the new value to put in the relation cell
-        int connectedEdges = (int) vert1.get(vert2Index);
-        if (connectedEdges == 0) {
-            ArrayList<T> neighbour = vert1.get(0);
-            return verticesConnected(vertLabel1, neighbour.get(0));
+    /*
+     * Find the node using a breadth first search
+     */
+    private int checkNeighbours(ArrayList<ArrayList<T>> currNodes, ArrayList<T> goal, int distance, ArrayList<ArrayList<T>> checkedNodes) {
+        distance++;
+
+        if (currNodes.contains(goal)) {
+            return distance;
         }
-        System.out.println(vertLabel1 + ", " + vertLabel2 + " are connected");
-        return true;
+        
+        ArrayList<ArrayList<T>> neighbours = new ArrayList<ArrayList<T>>();
+        //Go through all nodes at level
+        for (int i = 0; i < currNodes.size(); i++) {
+            ArrayList<T> node = currNodes.get(i);
+            T nodeLabel = node.get(0);
+            ArrayList<T> connectedNodes = neighbours(nodeLabel);
+            //Go through all the connected nodes
+            for (int n = 0; n < connectedNodes.size(); n++) {
+                ArrayList<T> conNode = labelToVert(connectedNodes.get(n));
+                //If the node hasn't yet been checked, add it to the list of neighbours
+                if (!checkedNodes.contains(conNode)) {
+                    neighbours.add(conNode);
+                }
+            }
+        }
+        //Determine if source and target are disconnected
+        if (neighbours.size() == 0) return disconnectedDist;
+        
+        checkedNodes.addAll(currNodes);
+        //Perform the same set of checks on the next unchecked neighbours
+        return checkNeighbours(neighbours, goal, distance, checkedNodes);
+    }
+
+    
+    private ArrayList<T> labelToVert(T vertLabel) {
+        int vertIndex = findVertIndex(vertLabel);
+        ArrayList<T> vertex = matrix.get(vertIndex);
+        return vertex;
     }
     
 
