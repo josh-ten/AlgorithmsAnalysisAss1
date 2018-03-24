@@ -129,18 +129,18 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         ArrayList<T> labelRow = matrix.get(0);
         os.print("Vertices: ");
         for (int i = 0; i < labelRow.size(); i++) {
-            os.print(labelRow.get(i) + ", ");
+            os.print("<" + labelRow.get(i) + "> ");
         }
         os.println();
     } // end of printVertices()
 	
     
     public void printEdges(PrintWriter os) {
-        os.println("\nAdjacency Matrix: ");
-        os.println("   " + matrix.get(0)); //Label row
         for (int i = 1; i < matrix.size(); i++) {
             ArrayList<T> row = matrix.get(i);
-            os.println(row);
+            for (int j = 0; j < row.size(); j++) {
+                os.println("<" + row.get(j) + "> ");
+            }
         }
         os.println();
     } // end of printEdges()
