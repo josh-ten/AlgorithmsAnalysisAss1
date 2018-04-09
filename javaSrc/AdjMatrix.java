@@ -145,6 +145,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         os.println();
     } // end of printEdges()
     
+    
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
     	ArrayList<T> start = labelToVert(vertLabel1);
     	ArrayList<T> goal = labelToVert(vertLabel2);
