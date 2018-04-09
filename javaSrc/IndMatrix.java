@@ -98,19 +98,24 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         ArrayList<T> edges = new ArrayList<T>();
         
         //first find and remove edges incorporating the vertex to remove
-        //josh i commented the stuff that doesnt work out
-//        for(int i=1; i<matrix.get(vertIndex).size(); i++){
-//            if (matrix.get(vertIndex).get(i).equals(1))
-//                edges.add(matrix.get(0).get(i-1));        
-//        }
-//        
-//        
-//        for (int i=0; i<edges.size(); i++){
-//            matrix.get(0).remove(findEdgeIndex(edges.get(i)));
-//            for (int j=1; j<matrix.size(); j++){
-//                matrix.get(j).remove(findEdgeIndex(edges.get(i))+1);
-//            }
-//        }
+        
+        for(int i=1; i<matrix.get(vertIndex).size(); i++){
+            if (matrix.get(vertIndex).get(i).equals(1)){
+                //System.out.println("Must remove edge " + matrix.get(0).get(i-1));
+                edges.add(matrix.get(0).get(i-1));        
+            }
+        }
+        
+        
+        for (int i=0; i<edges.size(); i++){
+            int edgeIndex = findEdgeIndex(edges.get(i));
+           // System.out.println("Edge index is " + edgeIndex);
+            matrix.get(0).remove(edgeIndex);
+            
+            for (int j=1; j<matrix.size(); j++){
+                matrix.get(j).remove(edgeIndex+1);
+            }
+        }
         matrix.remove(vertIndex);
         
        
@@ -141,7 +146,7 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         //System.out.println("printVertices call");
         //os.print("Vertices: ");
         for (int i=1; i<matrix.size(); i++){
-            os.print(matrix.get(i).get(0));
+            os.print(matrix.get(i).get(0) + " ");
         }
         os.println();
 
@@ -184,7 +189,7 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         
         //recursive break case
         if (toCheck.contains(goal)){
-            System.out.println("FOUND A CONNECTION, distance is " + distance);
+            //.out.println("FOUND A CONNECTION, distance is " + distance);
             return distance;
         }
         distance++;
@@ -209,7 +214,7 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         }
         
         if (neighbours.size()==0){
-            System.out.println("NO CONNECTION");
+            //System.out.println("NO CONNECTION");
             return disconnectedDist;
         }
         return checkVertex(distance, neighbours, goal, checked);
@@ -219,8 +224,21 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         
     }
     
+    /*DEBUGGING METHOD
+     * public void printMatrix(){
+        
+        for (int i=0; i<matrix.size();i++){
+            for (int j=0; j<matrix.get(i).size();j++){
+                if(i==0 && j==0){
+                    System.out.print("  ");
+                }
+                System.out.print(matrix.get(i).get(j));
+            }
+            System.out.println();
+        }
+    }
     
-    
+    */
     
     /* returns the index of the given vertex, or 0 if not found */
     public int findVertIndex(T label){
@@ -232,7 +250,7 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         }
         return 0;
     }
-    
+    /* finds index of given edge or -1 if not found*/
     public int findEdgeIndex(T label){
         for (int i=0; i<matrix.get(0).size(); i++){
             if (label.equals(matrix.get(0).get(i))){
@@ -242,7 +260,7 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         return -1;
     }
     
-    //finds the second half of relationship from the first
+    /*finds the second half of relationship from the first*/
     public T findSrcFromTar(int srcInd, int edgeInd){
         
         for (int i=1; i<matrix.size(); i++){
