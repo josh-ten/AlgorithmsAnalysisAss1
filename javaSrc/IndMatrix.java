@@ -95,17 +95,22 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
             System.err.println("Vertex does not exist");
             return;
         }
+        ArrayList<T> edges = new ArrayList<T>();
         
-        //first remove connected edges
+        //first find and remove edges incorporating the vertex to remove
+        //josh i commented the stuff that doesnt work out
 //        for(int i=1; i<matrix.get(vertIndex).size(); i++){
 //            if (matrix.get(vertIndex).get(i).equals(1))
-//                matrix.get(0).remove(i-1);
-//                for (int j=1; j<matrix.size(); j++){
-//                    matrix.get(j).remove(edgeIndex+1);
-//                }
+//                edges.add(matrix.get(0).get(i-1));        
 //        }
-        
-        
+//        
+//        
+//        for (int i=0; i<edges.size(); i++){
+//            matrix.get(0).remove(findEdgeIndex(edges.get(i)));
+//            for (int j=1; j<matrix.size(); j++){
+//                matrix.get(j).remove(findEdgeIndex(edges.get(i))+1);
+//            }
+//        }
         matrix.remove(vertIndex);
         
        
@@ -153,11 +158,68 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
     
     
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
-    	// Implement me!
+    	int v1=findVertIndex(vertLabel1);
+    	int v2=findVertIndex(vertLabel2);
+    	T goal = matrix.get(v2).get(0);
+    	int distance = 0;
+        
+    	ArrayList<T> path = new ArrayList<T>();
+    	ArrayList<T> checked = new ArrayList<T>();
+    	path.add(matrix.get(v1).get(0));
+    	distance = checkVertex(distance, path, goal, checked);
     	
-        // if we reach this point, source and target are disconnected
-        return disconnectedDist;    	
+    	// if we reach this point, source and target are disconnected
+    	if (distance==-1){
+    	    return disconnectedDist;
+    	}
+    	
+    	return distance;
     } // end of shortestPathDistance()
+    
+    
+  
+    /* recursively checks each next level of the graph until either it checks all 
+     * neighbours or finds a connection*/
+    public int checkVertex(int distance, ArrayList<T> toCheck, T goal, ArrayList<T> checked){
+        
+        //recursive break case
+        if (toCheck.contains(goal)){
+            System.out.println("FOUND A CONNECTION, distance is " + distance);
+            return distance;
+        }
+        distance++;
+        ArrayList<T> neighbours = new ArrayList<T>();
+        
+        //for each vertex in toCheck
+        for (int i=0; i<toCheck.size(); i++){
+            int currNode = findVertIndex(toCheck.get(i));
+            //System.out.println("Checking vertex " + toCheck.get(i));
+            
+            for (int j=1; j<matrix.get(currNode).size();j++){
+                if (matrix.get(currNode).get(j).equals(1)){
+                    T target = findSrcFromTar(currNode, j);
+                    //if end vertex of relationship hasn't already been checked
+                    if (!checked.contains(target)){
+                        neighbours.add(target);
+                    }
+                }
+            } 
+            //finished checking this vertex so add to checked arraylist
+            checked.add(toCheck.get(i));
+        }
+        
+        if (neighbours.size()==0){
+            System.out.println("NO CONNECTION");
+            return disconnectedDist;
+        }
+        return checkVertex(distance, neighbours, goal, checked);
+        
+        
+       
+        
+    }
+    
+    
     
     
     /* returns the index of the given vertex, or 0 if not found */
