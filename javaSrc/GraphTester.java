@@ -218,7 +218,7 @@ public class GraphTester
 				graph = new IndMatrix<String>();
 				break;
 		    case "sample":
-		    	graph = new SampleImplementation<String>();
+//		    	graph = new SampleImplementation<String>();
 		    	break;
 			default:
 				System.err.println("Unknown implementation type.");

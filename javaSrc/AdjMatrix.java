@@ -22,11 +22,6 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	matrix.add(labelRow);
     } // end of AdjMatrix()
     
-    /*   [a, b, c, d]
-    * [a, 0, 1, 0, 0]
-    * [b, ]
-    */
-    
     @SuppressWarnings("unchecked")
     public void addVertex(T vertLabel) {
         // System.out.println("Adding vertex " + vertLabel + "...");
