@@ -11,35 +11,41 @@ public class JoshGraphTester {
     public static void main(String args[]) {
         PrintWriter writer = new PrintWriter(System.out, true);
         
-        graph = new AdjMatrix<String>();
+//        graph = new IndMatrix<String>();
+//        
+//        graph.addVertex("A");
+//        graph.addVertex("B");
+//        graph.addVertex("C");
+//        graph.addVertex("D");
+//        graph.addVertex("E");
+//        graph.addEdge("A", "B");
+//        graph.addEdge("B", "D");
+//        graph.addEdge("D", "C");
+//        graph.addEdge("A", "E");
+//        
+//        graph.printEdges(writer);
+//        
+//        graph.shortestPathDistance("D", "E");
+//
+//        graph.removeVertex("B");
+//        
+//        graph.printEdges(writer);
+//        graph.addVertex("D");
+//        graph.addEdge("D", "C");
+//        graph.addEdge("E", "D");
+//        graph.addEdge("D", "D");
+//        graph.printEdges(writer);
+//        writer.println(graph.neighbours("C"));
+//        
+//        graph.removeEdge("C", "D");
+//        graph.printEdges(writer);
+//        graph.printVertices(writer);
         
-        graph.addVertex("A");
-        graph.addVertex("B");
-        graph.addVertex("C");
-        graph.addVertex("D");
-        graph.addVertex("E");
-        graph.addEdge("A", "B");
-        graph.addEdge("B", "D");
-        graph.addEdge("D", "C");
-        graph.addEdge("A", "E");
-        
-        graph.printEdges(writer);
-        
-        graph.shortestPathDistance("D", "E");
-
-        graph.removeVertex("B");
-        
-        graph.printEdges(writer);
-        graph.addVertex("D");
-        graph.addEdge("D", "C");
-        graph.addEdge("E", "D");
-        graph.addEdge("D", "D");
-        graph.printEdges(writer);
-        writer.println(graph.neighbours("C"));
-        
-        graph.removeEdge("C", "D");
-        graph.printEdges(writer);
-        graph.printVertices(writer);
+        FriendshipGraph<Integer> graph = new AdjMatrix<Integer>();
+        graph.addVertex(1);
+        graph.addVertex(2);
+        graph.addEdge(1, 2);
+        System.out.println(graph.shortestPathDistance(1, 2));
 
         String inputFilename = "";
         if (inputFilename != "") loadFile(inputFilename);
