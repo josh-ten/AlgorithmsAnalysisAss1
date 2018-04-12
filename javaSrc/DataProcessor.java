@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/**
+ * Data Processor for testing the AdjMatrix and IndMatrix implementations of
+ * the friendship graph
+ * 
+ * @author Joshua Tencic, Mia Turner, 2018
+ */
 public class DataProcessor {
 
     public static FriendshipGraph<String> graph;

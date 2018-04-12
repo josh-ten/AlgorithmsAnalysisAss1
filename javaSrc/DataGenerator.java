@@ -1,3 +1,9 @@
+/**
+ * Test Data Generator class for the AdjMatrix and IndMatrix implementations of the Friendship Graph
+ * 
+ * @author Joshua Tencic, Mia Turner, 2018
+ *
+ */
 public class DataGenerator {
     
     /*

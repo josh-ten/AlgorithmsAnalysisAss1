@@ -1,13 +1,10 @@
 import java.io.*;
 import java.util.*;
 
-
 /**
  * Adjacency matrix implementation for the FriendshipGraph interface.
- * 
- * Your task is to complete the implementation of this class.  You may add methods, but ensure your modified class compiles and runs.
  *
- * @author Jeffrey Chan, 2016.
+ * @author Joshua Tencic, Mia Turner, 2018.
  */
 public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 {
