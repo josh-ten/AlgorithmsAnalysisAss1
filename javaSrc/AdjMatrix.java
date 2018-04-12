@@ -50,6 +50,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public void addEdge(T srcLabel, T tarLabel) {
         int srcIndex = findVertIndex(srcLabel);
         int tarIndex = findVertIndex(tarLabel);
+        if (srcIndex == -1 || tarIndex == -1) return;
         ArrayList<T> src = matrix.get(srcIndex);
         ArrayList<T> tar = matrix.get(tarIndex);
         // System.out.println("Adding edge from " + srcLabel + " to " + tarLabel + "...");
@@ -91,6 +92,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         ArrayList<T> vertexToRemove = matrix.get(vertIndex);
         // System.out.println("Removing " + vertLabel + "...");
         
+        //Remove all the cells the vertex had
         for (int i = 1; i < matrix.size(); i++) {
             ArrayList<T> vertex = matrix.get(i);
             vertex.remove(vertIndex);

@@ -9,7 +9,7 @@ public class DataProcessor {
 
     public static FriendshipGraph<String> graph;
     public static final int VERTEX_RANGE = 100;
-    public static final int ITERATIONS_PER_TEST = 50;
+    public static final int ITERATIONS_PER_TEST = 100;
     private static final int COMMANDS_PER_TEST = 50;
     
     public static void main(String args[]) throws IOException{
@@ -121,7 +121,7 @@ public class DataProcessor {
                 //Run the generated test data
                 processOperations(testData);
                 long deltaTime = System.nanoTime() - startTime;
-                double estimatedTime = (double) deltaTime / Math.pow(10, 8);
+                double estimatedTime = (double) deltaTime / Math.pow(10, 9);
                 avgEstimatedTime += estimatedTime;
             }
             //Average out the results

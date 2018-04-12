@@ -104,7 +104,6 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
             }
         }
         
-        
         for (int i=0; i<edges.size(); i++){
             int edgeIndex = findEdgeIndex(edges.get(i));
            // System.out.println("Edge index is " + edgeIndex);
@@ -139,11 +138,6 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
             return;
         }
         int edgeIndex = findEdgeIndex(edge);
-//        if (edgeIndex == -1){
-//            //given edge does not exist.
-//            // System.err.println("Edge does not exist");
-//            return;
-//        }
        
         matrix.get(0).remove(edgeIndex);
         for (int i=1; i<matrix.size(); i++){
