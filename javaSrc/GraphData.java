@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 
+/**
+ * Store the vertices and edges that are being added to the graphs, so that
+ * the density can be calculated for testing purposes (as the vertex and 
+ * edge count is inaccessible from the Friendship Graph child classes)
+ * @author Joshua Tencic, 2018
+ *
+ */
 public class GraphData {
     private ArrayList<String[]> edges;
     private ArrayList<String> vertices;

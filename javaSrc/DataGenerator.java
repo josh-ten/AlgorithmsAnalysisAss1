@@ -52,7 +52,7 @@ public class DataGenerator {
     /*
      * Shortest distance and neighbours
      */
-    public static String scenario2(int vertexRange, int tests) {
+    public static String scenario2(int tests, int vertexRange) {
         StringBuilder commandList = new StringBuilder();
 
         for (int i = 0; i < tests; i++) {
