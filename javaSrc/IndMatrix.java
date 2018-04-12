@@ -21,16 +21,13 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         //Label row
         ArrayList<T> labelRow = new ArrayList<T>();
         matrix.add(labelRow);
-
-        
-        
     } // end of IndMatrix()
     
     
     @SuppressWarnings("unchecked")
     public void addVertex(T vertLabel) {
         //check if vertex already exists[
-        if (findVertIndex(vertLabel)!=0){
+        if (findVertIndex(vertLabel)!=-1){
             //System.err.println("Vertex already exists");
             return;
         }
@@ -52,7 +49,7 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         //check that src and tar exist in graph
         int srcInd = findVertIndex(srcLabel);
         int tarInd = findVertIndex(tarLabel);
-        if ((srcInd==0) || (tarInd==0)){
+        if ((srcInd==-1) || (tarInd==-1)){
             System.out.println("label not in graph");
             return;
         }
@@ -91,9 +88,9 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
     public void removeVertex(T vertLabel) {
 
         int vertIndex = findVertIndex(vertLabel);
-        if (vertIndex==0){
+        if (vertIndex==-1){
             //given vertex does not exist.
-            System.err.println("Vertex does not exist");
+            //System.err.println("Vertex does not exist");
             return;
         }
         ArrayList<T> edges = new ArrayList<T>();
@@ -127,6 +124,11 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         
         int v1 = findVertIndex(srcLabel);
         int v2 = findVertIndex(tarLabel);
+        if (v1==-1 || v2==-1){
+            // System.err.println("One or both vertex/s does not exist");
+            return;
+        }
+        
         T edge = null;
         for (int i=1; i<matrix.get(v1).size();i++){
             if (matrix.get(v1).get(i).equals(1) && matrix.get(v2).get(i).equals(1)){
@@ -137,15 +139,12 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
             return;
         }
         int edgeIndex = findEdgeIndex(edge);
-        if (edgeIndex == -1){
-            //given edge does not exist.
-            // System.err.println("Edge does not exist");
-            return;
-        }
-        if (findVertIndex(srcLabel)==0 || findVertIndex(srcLabel)==0){
-            // System.err.println("One or both vertex/s does not exist");
-        }
-        
+//        if (edgeIndex == -1){
+//            //given edge does not exist.
+//            // System.err.println("Edge does not exist");
+//            return;
+//        }
+       
         matrix.get(0).remove(edgeIndex);
         for (int i=1; i<matrix.size(); i++){
             matrix.get(i).remove(edgeIndex+1);
@@ -190,11 +189,6 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
     	path.add(matrix.get(v1).get(0));
     	distance = checkVertex(distance, path, goal, checked);
     	
-    	// if we reach this point, source and target are disconnected
-    	if (distance==-1){
-    	    return disconnectedDist;
-    	}
-    	
     	return distance;
     } // end of shortestPathDistance()
     
@@ -215,6 +209,10 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
         //for each vertex in toCheck
         for (int i=0; i<toCheck.size(); i++){
             int currNode = findVertIndex(toCheck.get(i));
+            if (currNode==-1){
+                //vert not found
+                continue;
+            }
             //System.out.println("Checking vertex " + toCheck.get(i));
             
             for (int j=1; j<matrix.get(currNode).size();j++){
@@ -265,7 +263,7 @@ public class IndMatrix <T extends Object> implements FriendshipGraph<T>
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
     /* finds index of given edge or -1 if not found*/
     public int findEdgeIndex(T label){

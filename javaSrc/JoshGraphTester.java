@@ -11,22 +11,25 @@ public class JoshGraphTester {
     public static void main(String args[]) {
         PrintWriter writer = new PrintWriter(System.out, true);
         
-//        graph = new IndMatrix<String>();
-//        
-//        graph.addVertex("A");
-//        graph.addVertex("B");
-//        graph.addVertex("C");
-//        graph.addVertex("D");
-//        graph.addVertex("E");
-//        graph.addEdge("A", "B");
-//        graph.addEdge("B", "D");
-//        graph.addEdge("D", "C");
-//        graph.addEdge("A", "E");
-//        
-//        graph.printEdges(writer);
-//        
-//        graph.shortestPathDistance("D", "E");
-//
+        graph = new IndMatrix<String>();
+        
+        graph.addVertex("A");
+        graph.addVertex("D");
+
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("E");
+        graph.addEdge("A", "B");
+        graph.addEdge("B", "D");
+        graph.addEdge("D", "C");
+        graph.addEdge("A", "E");
+        
+        graph.printEdges(writer);
+        
+        writer.println(graph.shortestPathDistance("D", "E"));
+        writer.println(graph.shortestPathDistance("A", "D"));
+        graph.shortestPathDistance("A", "D");
+
 //        graph.removeVertex("B");
 //        
 //        graph.printEdges(writer);
@@ -41,11 +44,8 @@ public class JoshGraphTester {
 //        graph.printEdges(writer);
 //        graph.printVertices(writer);
         
-        FriendshipGraph<Integer> graph = new AdjMatrix<Integer>();
-        graph.addVertex(1);
-        graph.addVertex(2);
-        graph.addEdge(1, 2);
-        System.out.println(graph.shortestPathDistance(1, 2));
+//        FriendshipGraph<Integer> graph = new AdjMatrix<Integer>();
+       
 
         String inputFilename = "";
         if (inputFilename != "") loadFile(inputFilename);

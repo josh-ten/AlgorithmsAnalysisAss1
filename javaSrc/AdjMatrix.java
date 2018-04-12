@@ -88,8 +88,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     public void removeVertex(T vertLabel) {
         int vertIndex = findVertIndex(vertLabel);
+        if (vertIndex == -1) return;
         ArrayList<T> vertexToRemove = matrix.get(vertIndex);
-        
         // System.out.println("Removing " + vertLabel + "...");
         
         for (int i = 1; i < matrix.size(); i++) {
@@ -106,6 +106,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public void removeEdge(T srcLabel, T tarLabel) {
         int srcIndex = findVertIndex(srcLabel);
         int tarIndex = findVertIndex(tarLabel);
+        if (srcIndex == -1 || tarIndex == -1) return;
         ArrayList<T> src = matrix.get(srcIndex);
         ArrayList<T> tar = matrix.get(tarIndex);
                 
@@ -116,7 +117,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         T newTarEdges = (T) new Integer(currTarEdges - 1);
         
         if ((Integer) newSrcEdges < 0 || (Integer) newTarEdges < 0) {
-            System.out.println("ERROR: No edge between " + srcLabel + " and " + tarLabel + "...");
+//            System.out.println("ERROR: No edge between " + srcLabel + " and " + tarLabel + "...");
         } else {
             // System.out.println("\nRemoving edge between " + srcLabel + " and " + tarLabel);
             //Set the value
