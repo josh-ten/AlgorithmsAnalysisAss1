@@ -71,17 +71,18 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         ArrayList<T> neighbours = new ArrayList<T>();
         
         int vertIndex = findVertIndex(vertLabel);
-        ArrayList<T> vertex = matrix.get(vertIndex);
-        
-        //Find which vertices have 1 or more connection and add them to the list
-        for (int i = 1; i < vertex.size(); i++) {
-            if ((Integer) vertex.get(i) > 0) {
-                ArrayList<T> neighbour = matrix.get(i); //Add for entire list of neighbours 
-                T neighbourLabel = neighbour.get(0); //Add for only label
-                neighbours.add(neighbourLabel);
+        if (vertIndex >= 0) {
+            ArrayList<T> vertex = matrix.get(vertIndex);
+            
+            //Find which vertices have 1 or more connection and add them to the list
+            for (int i = 1; i < vertex.size(); i++) {
+                if ((Integer) vertex.get(i) > 0) {
+                    ArrayList<T> neighbour = matrix.get(i); //Add for entire list of neighbours 
+                    T neighbourLabel = neighbour.get(0); //Add for only label
+                    neighbours.add(neighbourLabel);
+                }
             }
         }
-        
         return neighbours;
     } // end of neighbours()
     
@@ -156,6 +157,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
     	ArrayList<T> start = labelToVert(vertLabel1);
     	ArrayList<T> goal = labelToVert(vertLabel2);
+    	if (start.isEmpty() || start.isEmpty()) return -1;
     	
     	ArrayList<ArrayList<T>> currNodes = new ArrayList<ArrayList<T>>();
     	currNodes.add(start);
@@ -198,8 +200,9 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 
     
     private ArrayList<T> labelToVert(T vertLabel) {
+        ArrayList<T> vertex = new ArrayList<T>();
         int vertIndex = findVertIndex(vertLabel);
-        ArrayList<T> vertex = matrix.get(vertIndex);
+        if (vertIndex >= 0) vertex = matrix.get(vertIndex);
         return vertex;
     }
     

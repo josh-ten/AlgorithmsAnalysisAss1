@@ -1,18 +1,21 @@
 public class DataGenerator {
     
-    public static String generateData(int vertexRange, int edgesToEdit, int scenario) {
+    /*
+     * Generate test data commands for the given scenario
+     */
+    public static String generateTestData(int numTests, int scenario) {
         StringBuilder testData = new StringBuilder();
         switch (scenario) {
             case 1: { 
-                testData.append(scenario1(edgesToEdit, vertexRange));
+                testData.append(scenario1(numTests, DataProcessor.VERTEX_RANGE));
                 break;
             }
             case 2: {
-                testData.append(scenario2(edgesToEdit, vertexRange));
+                testData.append(scenario2(numTests, DataProcessor.VERTEX_RANGE));
                 break;
             }
             case 3: {
-                testData.append(scenario3(edgesToEdit, vertexRange));
+                testData.append(scenario3(numTests, DataProcessor.VERTEX_RANGE));
                 break;
             }
             default: {
@@ -22,6 +25,9 @@ public class DataGenerator {
         return testData.toString();
     }
     
+    /*
+     * Adding edges and vertices
+     */
     public static String scenario1(int numEdgesToAdd, int vertexRange) {
         StringBuilder commandList = new StringBuilder();
 
@@ -36,7 +42,10 @@ public class DataGenerator {
         }
         return commandList.toString();
     }
-
+    
+    /*
+     * Shortest distance and neighbours
+     */
     public static String scenario2(int vertexRange, int tests) {
         StringBuilder commandList = new StringBuilder();
 
@@ -52,6 +61,9 @@ public class DataGenerator {
         return commandList.toString();
     }
 
+    /*
+     * Removing edges and vertices
+     */
     public static String scenario3(int numEdgesToRemove, int vertexRange) {
         StringBuilder commandList = new StringBuilder();
         
@@ -69,6 +81,9 @@ public class DataGenerator {
 
     }
     
+    /*
+     * Generate a random string of an integer from a given range
+     */
     public static String randomStrNum(int min, int max) {
         int range = max - min;
         int num = (int) (Math.random() * range) + min;

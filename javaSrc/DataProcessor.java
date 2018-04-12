@@ -8,7 +8,9 @@ import java.util.ArrayList;
 public class DataProcessor {
 
     public static FriendshipGraph<String> graph;
-    public static int vertexRange = 100;
+    public static final int VERTEX_RANGE = 100;
+    public static final int ITERATIONS_PER_TEST = 10;
+    private static final int COMMANDS_PER_TEST = 50;
     
     public static void main(String args[]) throws IOException{
         //Load up the facebook_combined.txt file
@@ -16,14 +18,13 @@ public class DataProcessor {
         PrintWriter pw = null;
         String filename = "facebook_combined.txt";
         ArrayList<String> initialData = loadFile(filename);
-        int iterationsPerTest = 10;
         //For each scenario
         pw = new PrintWriter(new File("adjMatTestResults.csv"));
         for (int i = 1; i <= 3; i++) {
             System.out.println("\nScenario " + i + "\n-----------------");
             //Adjacency Matrix
             System.out.println("Testing Adjacency Matrix\n-------------------");
-            testGraph(initialData, i, 0.05f, iterationsPerTest, pw, "adjmat");
+            testGraph(initialData, i, 0.05f, pw, "adjmat");
         }
         pw.close();
         pw = new PrintWriter(new File("indMatTestResults.csv"));
@@ -31,13 +32,16 @@ public class DataProcessor {
             System.out.println("\nScenario " + i + "\n-----------------");
             //Incidence Matrix
             System.out.println("\nTesting Incidence Matrix\n-------------------");
-            testGraph(initialData, i, 0.05f, iterationsPerTest, pw, "indmat");
+            testGraph(initialData, i, 0.05f, pw, "indmat");
             
         }
         pw.close();
         System.out.println("\nI'm finished!!!");
     }
     
+    /*
+     * Load the file and store it in a local variable for reuse later
+     */
     static ArrayList<String> loadFile(String filename) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         String line;
@@ -49,10 +53,13 @@ public class DataProcessor {
         return data;
     }
     
+    /*
+     * Use the data loaded from the file to reset and repopulate the graph 
+     * to it's initial state
+     */
     public static GraphData loadMatrix(ArrayList<String> data, String implementationType, int sampleSize) {
         GraphData graphData = new GraphData();
         // determine which implementation to test
-        
         switch(implementationType) {
             case "adjmat":
                 graph = new AdjMatrix<String>();
@@ -85,46 +92,57 @@ public class DataProcessor {
         return graphData;
     }
     
-    public static void testGraph(ArrayList<String> initData, int scenario, float increment, int numTests, PrintWriter pw, String graphType) {
-        //Create the spreadsheet column headings
+    /*
+     * Run tests on the graph at each density required, and add 
+     * that data to the output file
+     */
+    public static void testGraph(ArrayList<String> initData, int scenario, float increment, PrintWriter pw, String graphType) {
+        //Create the data column headings
         StringBuilder results = new StringBuilder();
-        GraphData graphData = loadMatrix(initData, graphType, vertexRange);
         results.append("Scenario " + scenario + "\n");
         results.append("Density, ");
         results.append("Time lapsed");
         results.append("\n");
-        for (float i = 0.05f; i <= 1.001f; i += increment) {
-            double avgEstimatedTime = 0.0f;
+        //Iterate through all the densities
+        for (float i = 0f; i <= 1.001f; i += increment) {
             System.out.println(String.format("Graph Density: %.2f, ", i));
-            increaseDensityTo(i, graphData);
-            for (int j = 0; j < numTests; j++) {
-                //Once each level of density is correct, add an arbitrary number of edges to the graph
-                //Measure how long this takes for each density level using nanoTime
+            double avgEstimatedTime = 0.0f;
+            //Once each level of density is correct, add an arbitrary number of edges to the graph
+            for (int j = 0; j < ITERATIONS_PER_TEST; j++) {
+                //Reset the graphData and matrix
+                GraphData graphData = loadMatrix(initData, graphType, VERTEX_RANGE);
+                //Bring the density to the required amount
+                increaseDensityTo(i, graphData);
                 //Generate test data
-                String testData = DataGenerator.generateData(vertexRange, 100, scenario);
-                //System.out.println(testData);
+                String testData = DataGenerator.generateTestData(COMMANDS_PER_TEST, scenario);
+                //Measure how long this takes for each density level using nanoTime
                 long startTime = System.nanoTime();
+                //Run the generated test data
                 processOperations(testData);
                 long deltaTime = System.nanoTime() - startTime;
-                double estimatedTime = (double) deltaTime / Math.pow(10, 9);
-                graphData = loadMatrix(initData, graphType, vertexRange);
+                double estimatedTime = (double) deltaTime / Math.pow(10, 8);
                 avgEstimatedTime += estimatedTime;
             }
-            avgEstimatedTime /= numTests;
+            //Average out the results
+            avgEstimatedTime /= ITERATIONS_PER_TEST;
             System.out.println(String.format("Time lapsed: %.10f s", avgEstimatedTime));
+            //Append results
             results.append(String.format("%.2f, ", i));
             results.append(String.format("%.10f", avgEstimatedTime));
             results.append("\n");
         }
+        //Write to the file
         pw.write(results.toString());
     }
 
+    /*
+     * Add random edges to the graph until the density is the desired amount
+     */
     public static void increaseDensityTo(float desiredDensity, GraphData graphData) {
-        //Add random edges to the graph until the density is one of a range of values
         while (graphData.calcDensity() < desiredDensity) {
             //Randomly add edges until density = desiredDensity
-            String v1 = DataGenerator.randomStrNum(0, vertexRange);
-            String v2 = DataGenerator.randomStrNum(0, vertexRange);
+            String v1 = DataGenerator.randomStrNum(0, VERTEX_RANGE);
+            String v2 = DataGenerator.randomStrNum(0, VERTEX_RANGE);
             if (v1 != v2) {
                 graph.addEdge(v1, v2);
                 graphData.addEdge(v1, v2);
@@ -132,15 +150,9 @@ public class DataProcessor {
         }
     }
 
-    public void removeEdges(ArrayList<String[]> edges, GraphData graphData) {
-        for (int i = 0; i < edges.size(); i++) {
-            String vertA = edges.get(i)[0];
-            String vertB = edges.get(i)[1];
-            graph.removeEdge(vertA, vertB);
-            graphData.removeEdge(vertA, vertB);
-        }
-    }
-    
+    /*
+     * Run the commands stored in the commandlist
+     */
     public static void processOperations(String commandList) {
         String[] lines = commandList.split("\n");
         for (int i = 0; i < lines.length; i++) {
