@@ -57,13 +57,11 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         //Find the new value to put in the relation cell
         Integer currSrcEdges = (Integer) src.get(tarIndex);
         Integer currTarEdges = (Integer) tar.get(srcIndex);
-        T newSrcEdges = (T) new Integer(currSrcEdges+1);
-        T newTarEdges = (T) new Integer(currTarEdges+1);
-        
-        //Set the value
-        src.set(tarIndex, newSrcEdges);
-        tar.set(srcIndex, newTarEdges);
-        
+        if (currSrcEdges == 0 && currTarEdges == 0) {
+            //Set the value
+            src.set(tarIndex, (T) new Integer(1));
+            tar.set(srcIndex, (T) new Integer(1));
+        }
     } // end of addEdge()
 	
 
@@ -114,16 +112,10 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         //Find the new value to put in the relation cell
         Integer currSrcEdges = (Integer) src.get(tarIndex);
         Integer currTarEdges = (Integer) tar.get(srcIndex);
-        T newSrcEdges = (T) new Integer(currSrcEdges - 1);
-        T newTarEdges = (T) new Integer(currTarEdges - 1);
-        
-        if ((Integer) newSrcEdges < 0 || (Integer) newTarEdges < 0) {
-//            System.out.println("ERROR: No edge between " + srcLabel + " and " + tarLabel + "...");
-        } else {
+        if (currSrcEdges == 1 && currTarEdges == 1) {
             // System.out.println("\nRemoving edge between " + srcLabel + " and " + tarLabel);
-            //Set the value
-            src.set(tarIndex, newSrcEdges);
-            tar.set(srcIndex, newTarEdges);
+            src.set(tarIndex, (T) new Integer(0));
+            tar.set(srcIndex, (T) new Integer(0));
         }
     } // end of removeEdges()
 	
@@ -145,19 +137,12 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
                 }
             }
         }
-        /*os.println("\nAdjacency Matrix: ");
-        os.println("   " + matrix.get(0)); //Label row
-        for (int i = 1; i < matrix.size(); i++) {
-            ArrayList<T> row = matrix.get(i);
-            os.println(row);
-        }
-        os.println();*/
     } // end of printEdges()
     
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
     	ArrayList<T> start = labelToVert(vertLabel1);
     	ArrayList<T> goal = labelToVert(vertLabel2);
-    	if (start.isEmpty() || start.isEmpty()) return -1;
+    	if (start.isEmpty() || start.isEmpty()) return disconnectedDist;
     	
     	ArrayList<ArrayList<T>> currNodes = new ArrayList<ArrayList<T>>();
     	currNodes.add(start);
