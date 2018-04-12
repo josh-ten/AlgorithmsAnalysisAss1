@@ -9,31 +9,31 @@ public class DataProcessor {
 
     public static FriendshipGraph<String> graph;
     public static final int VERTEX_RANGE = 100;
-    public static final int ITERATIONS_PER_TEST = 10;
+    public static final int ITERATIONS_PER_TEST = 50;
     private static final int COMMANDS_PER_TEST = 50;
     
     public static void main(String args[]) throws IOException{
-        //Load up the facebook_combined.txt file
-        //Take a subset of it so that it's faster to work with (1000 lines)
         PrintWriter pw = null;
+        //Load up the facebook_combined.txt file and
+        //Take a subset of it so that it's faster to work with (1000 lines)
         String filename = "facebook_combined.txt";
         ArrayList<String> initialData = loadFile(filename);
-        //For each scenario
+        //Adjacency Matrix
         pw = new PrintWriter(new File("adjMatTestResults.csv"));
+        System.out.println("Testing Adjacency Matrix\n-------------------");
+        //For each scenario
         for (int i = 1; i <= 3; i++) {
             System.out.println("\nScenario " + i + "\n-----------------");
-            //Adjacency Matrix
-            System.out.println("Testing Adjacency Matrix\n-------------------");
             testGraph(initialData, i, 0.05f, pw, "adjmat");
         }
         pw.close();
+        //Incidence Matrix
         pw = new PrintWriter(new File("indMatTestResults.csv"));
+        System.out.println("\nTesting Incidence Matrix\n-------------------");
+        //For each scenario
         for (int i = 1; i <= 3; i++) {
-            System.out.println("\nScenario " + i + "\n-----------------");
-            //Incidence Matrix
-            System.out.println("\nTesting Incidence Matrix\n-------------------");
+            System.out.println("\nScenario " + i + "\n-----------");
             testGraph(initialData, i, 0.05f, pw, "indmat");
-            
         }
         pw.close();
         System.out.println("\nI'm finished!!!");
@@ -41,6 +41,7 @@ public class DataProcessor {
     
     /*
      * Load the file and store it in a local variable for reuse later
+     * @param filename The name of the file to be loaded
      */
     static ArrayList<String> loadFile(String filename) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
